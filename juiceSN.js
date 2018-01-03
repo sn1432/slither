@@ -9,7 +9,7 @@
 // @name         Slither Bot by Juice SN
 // @namespace    https://github.com/sn1432/slither/blob/master/juiceSN.js
 // @version      1.4
-// @description  Slither.io Bot Championship Edition
+// @description  Slither.io Mods by Juice SN with Bot mode
 // @author       Credits to Jesse Miller
 // @match        http://slither.io/
 // @supportURL   https://github.com/sn1432/slither/blob/master/juiceSN.js
