@@ -8,7 +8,7 @@
 // ==UserScript==
 // @name         Slither Bot by Juice SN
 // @namespace    https://github.com/sn1432/slither/blob/master/juiceSN.js
-// @version      1.3
+// @version      1.4
 // @description  Slither.io Bot Championship Edition
 // @author       Credits to Jesse Miller
 // @match        http://slither.io/
@@ -20,7 +20,7 @@
 window.log = function () {
 if (window.logDebugging) {
 console.log.apply(console, arguments);
-}
+        }
 };
         var canvas = window.canvas = (function (window) {
         return {
@@ -104,26 +104,7 @@ console.log.apply(console, arguments);
 
                 return angle;
                 },
-                // Adjusts zoom in response to the mouse wheel.
-                setZoom: function (e) {
-                // Scaling ratio
-                if (window.gsc) {
-                window.gsc *= Math.pow(0.9, e.wheelDelta / - 120 || e.detail / 2 || 0);
-                        window.desired_gsc = window.gsc;
-                }
-                },
-                // Restores zoom to the default value.
-                resetZoom: function () {
-                window.gsc = 0.9;
-                        window.desired_gsc = 0.9;
-                },
-                // Maintains Zoom
-                maintainZoom: function () {
-                if (window.desired_gsc !== undefined) {
-                window.gsc = window.desired_gsc;
-                }
-                },
-               // Draw a rectangle on the canvas.
+                // Draw a rectangle on the canvas.
                 drawRect: function (rect, color, fill, alpha) {
                 if (alpha === undefined) alpha = 1;
                         var context = window.mc.getContext('2d');
@@ -346,7 +327,7 @@ console.log.apply(console, arguments);
         var bot = window.bot = (function (window) {
         return {
         isBotRunning: false,
-                isBotEnabled: true,
+                isBotEnabled: false,
                 stage: 'grow',
                 collisionPoints: [],
                 collisionAngles: [],
@@ -1506,7 +1487,7 @@ console.log.apply(console, arguments);
                 bot10scoresContainer = null;
                 botOverlayContainer = null; // reference to bot overlay container
                 //  Save the original slither.io functions so we can modify them, or reenable them later.
-                original_onmouseDown = window.onmousedown
+                //    original_onmouseDown = window.onmousedown
                 original_oef = window.oef
                 original_redraw = window.redraw
                 original_onmousemove = window.onmousemove;
@@ -1631,7 +1612,7 @@ console.log.apply(console, arguments);
                 }
                 // Letter 'Z' to reset zoom
                 if (e.keyCode === 90) {
-                canvas.resetZoom();
+                resetZoom();
                 }
                 // Letter 'Q' to quit to main menu
                 if (e.keyCode === 81) {
@@ -1642,7 +1623,7 @@ console.log.apply(console, arguments);
                 if (e.keyCode === 27) {
                 bot.quickRespawn();
                 }
-                         }
+                }
                 };
                 // Set menu
                 setupMenu();
@@ -1658,19 +1639,24 @@ console.log.apply(console, arguments);
                 showFPS();
                 // window.play_btn.btnf.addEventListener('click', userInterface.playButtonClickListener);
                 // document.onkeydown = userInterface.onkeydown;
-                window.onmousedown = onmousedown;
-                window.addEventListener('mouseup', onmouseup);
+                //   window.onmousedown = onmousedown;
+                //   window.addEventListener('mouseup', onmouseup);
                 // Hide top score
                 hideTop();
-                             // Load preferences
+                // Load preferences
                 loadPreference('logDebugging', false);
                 loadPreference('visualDebugging', false);
                 loadPreference('autoRespawn', false);
                 // Listener for mouse wheel scroll - used for setZoom function
-                document.body.addEventListener('mousewheel', canvas.setZoom);
-                document.body.addEventListener('DOMMouseScroll', canvas.setZoom);
-                // Start!
-                oefTimer();
+                if (/firefox/i.test(navigator.userAgent)) {
+        document.body.addEventListener('DOMMouseScroll', setZoom);
+        } else {
+        document.body.addEventListener('mousewheel', setZoom);
+        }
+
+
+        // Start!
+        oefTimer();
                 /**
                  * Prevent laggy logo animation
                  */
@@ -1830,18 +1816,19 @@ console.log.apply(console, arguments);
                 function toggleOptions() {
                 if (optionsContainer.style.display == 'none') {
                 optionsContainer.style.display = 'block';
-                bot10scoresContainer.style.display = 'block';
+                        bot10scoresContainer.style.display = 'block';
                 } else {
                 optionsContainer.style.display = 'none';
-                bot10scoresContainer.style.display = 'none';
+                        bot10scoresContainer.style.display = 'none';
                 }
-                              
+
                 }
 
                 /**
                  * Setup main menu
                  */
                 function setupMenu() {
+
                 var login = document.getElementById('login');
                         var playButtonContainer = document.getElementById('playh');
                         if (playButtonContainer) {
@@ -2102,7 +2089,9 @@ console.log.apply(console, arguments);
                  * Custom connection function to allow for selection of server ip, random or default behavior
                  */
                 function customConnect() {
+                    resetZoom();
                 if (!window.connect) {
+
                 return;
                 }
 
@@ -2160,7 +2149,7 @@ console.log.apply(console, arguments);
                  * Loop to force retry of connection
                  */
                 function connectionStatus() {
-                if (!window.connecting || retry == 10) {
+                if (!window.connecting || retry == 20) {
                 window.forcing = false;
                         retry = 0;
                         connectBtn.disabled = false;
@@ -2172,16 +2161,16 @@ console.log.apply(console, arguments);
 
                 /**
                  * Force disconnect from game and return to menu
-                 */
-                function disconnect(resetGame) {
-                if (window.playing) {
-                window.want_close_socket = true;
-                        window.dead_mtm = Date.now();
-                        if (resetGame) {
-                window.resetGame();
-                }
-                }
-                }
+                 
+                 function disconnect(resetGame) {
+                 if (window.playing) {
+                 window.want_close_socket = true;
+                 window.dead_mtm = Date.now();
+                 if (resetGame) {
+                 window.resetGame();
+                 }
+                 }
+                 } */
 
                 /**
                  * Handle random or rotating to next skin
@@ -2355,16 +2344,17 @@ console.log.apply(console, arguments);
                  */
                 function showFPS() {
                 if (window.playing && fpsContainer && window.fps && window.lrd_mtm) {
-                        if (Date.now() - window.lrd_mtm > 970) {
-                        fpsContainer.textContent = 'FPS: ' + window.fps;
-                    }
+                if (Date.now() - window.lrd_mtm > 970) {
+                fpsContainer.textContent = 'FPS: ' + window.fps;
+                }
                 }
                 setTimeout(showFPS, 30);
                 }
 
                 // Quit to menu
                 function quit() {
-                if (window.playing && window.resetGame) {
+                resetZoom();
+                        if (window.playing && window.resetGame) {
                 window.want_close_socket = true;
                         window.dead_mtm = 0;
                         if (window.play_btn) {
@@ -2439,7 +2429,7 @@ console.log.apply(console, arguments);
                 }
 
                 function oefTimer() {
-                canvas.maintainZoom();
+                maintainZoom();
                         var start = Date.now();
                         original_oef();
                         if (window.gfxEnabled) {
@@ -2504,11 +2494,11 @@ console.log.apply(console, arguments);
                 setTimeout(setLeaderboard, 10000);
                 }
                 }
-                    // Save variable to local storage
+                // Save variable to local storage
                 function savePreference(item, value) {
                 window.localStorage.setItem(item, value);
-                                     }
-                                     
+                }
+
                 // Load a variable from local storage
                 function loadPreference(preference, defaultVar) {
                 var savedItem = window.localStorage.getItem(preference);
@@ -2526,34 +2516,35 @@ console.log.apply(console, arguments);
                         window.log('No setting found for ' + preference +
                                 '. Used default: ' + window[preference]);
                 }
-                             return window[preference];
+                return window[preference];
                 }
-              function onmousedown(e) {
-                if (window.playing) {
-                switch (e.which) {
-                // "Left click" to manually speed up the slither
-                case 1:
-                        bot.defaultAccel = 1;
-                        if (!bot.isBotEnabled) {
-                original_onmouseDown(e);
-                }
-                break;
-                        // "Right click" to toggle bot in addition to the letter "T"
-                        case 3:
-                        bot.isBotEnabled = !bot.isBotEnabled;
-                        break;
-                }
-                } else {
-                original_onmouseDown(e);
-                }
+                /*
+                 function onmousedown(e) {
+                 if (window.playing) {
+                 switch (e.which) {
+                 // "Left click" to manually speed up the slither
+                 case 1:
+                 bot.defaultAccel = 1;
+                 if (!bot.isBotEnabled) {
+                 original_onmouseDown(e);
+                 }
+                 break;
+                 // "Right click" to toggle bot in addition to the letter "T"
+                 case 3:
+                 bot.isBotEnabled = !bot.isBotEnabled;
+                 break;
+                 }
+                 } else {
+                 original_onmouseDown(e);
+                 }
                  }
                  
-                   
-                function onmouseup() {
-                bot.defaultAccel = 0;
-                }
-                
-                          // Hide top score
+                 
+                 function onmouseup() {
+                 bot.defaultAccel = 0;
+                 } */
+
+                // Hide top score
                 function hideTop() {
                 var nsidivs = document.querySelectorAll('div.nsi');
                         for (var i = 0; i < nsidivs.length; i++) {
@@ -2564,11 +2555,29 @@ console.log.apply(console, arguments);
                 }
                 }
                 }
+                // Restores zoom to the default value.
+                function resetZoom() {
+                window.gsc = 0.9;
+                        window.desired_gsc = 0.9;
+                }
+                // Adjusts zoom in response to the mouse wheel.
+                function setZoom(e) {
+                // Scaling ratio
+                if (window.gsc) {
+                window.gsc *= Math.pow(0.9, e.wheelDelta / - 120 || e.detail / 2 || 0);
+                        window.desired_gsc = window.gsc;
+                }
+                }
+                // Maintains Zoom
+                function maintainZoom() {
+                if (window.desired_gsc !== undefined) {
+                window.gsc = window.desired_gsc;
+                }
+                }
                 /**
                  * Update loop for real-time data
                  */
                 function updateLoop() {
-
                 setupGraphics();
                         if (window.playing) {
                 var other_options = '[Mouse Wheel] zoom' + '<br>' + '[Z] reset zoom' + '<br>' + '[ESC] quick respawn' + '<br>'
