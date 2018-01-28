@@ -8,7 +8,7 @@
 // ==UserScript==
 // @name         Slither Bot by Juice SN
 // @namespace    https://github.com/sn1432/slither/blob/master/juiceSN.js
-// @version      1.4
+// @version      1.6
 // @description  Slither.io Mods by Juice SN with Bot mode
 // @author       Credits to Jesse Miller
 // @match        http://slither.io/
@@ -20,7 +20,7 @@
 window.log = function () {
 if (window.logDebugging) {
 console.log.apply(console, arguments);
-        }
+}
 };
         var canvas = window.canvas = (function (window) {
         return {
@@ -1621,7 +1621,8 @@ console.log.apply(console, arguments);
                 }
                 // 'ESC' to quickly respawn
                 if (e.keyCode === 27) {
-                bot.quickRespawn();
+                resetZoom();
+                        bot.quickRespawn();
                 }
                 }
                 };
@@ -1641,6 +1642,11 @@ console.log.apply(console, arguments);
                 // document.onkeydown = userInterface.onkeydown;
                 //   window.onmousedown = onmousedown;
                 //   window.addEventListener('mouseup', onmouseup);
+                //   Disable right click
+                //   
+                document.addEventListener("contextmenu", function(e){
+                e.preventDefault();
+                        }, false)
                 // Hide top score
                 hideTop();
                 // Load preferences
@@ -2089,8 +2095,8 @@ console.log.apply(console, arguments);
                  * Custom connection function to allow for selection of server ip, random or default behavior
                  */
                 function customConnect() {
-                    resetZoom();
-                if (!window.connect) {
+                resetZoom();
+                        if (!window.connect) {
 
                 return;
                 }
@@ -2353,8 +2359,7 @@ console.log.apply(console, arguments);
 
                 // Quit to menu
                 function quit() {
-                resetZoom();
-                        if (window.playing && window.resetGame) {
+                if (window.playing && window.resetGame) {
                 window.want_close_socket = true;
                         window.dead_mtm = 0;
                         if (window.play_btn) {
