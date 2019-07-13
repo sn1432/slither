@@ -8,7 +8,7 @@
 // ==UserScript==
 // @name         Slither Bot by Juice SN
 // @namespace    https://github.com/sn1432/slither/blob/master/juiceSN.js
-// @version      1.6
+// @version      1.9
 // @description  Slither.io Mods by Juice SN with Bot mode
 // @author       Credits to Jesse Miller
 // @match        http://slither.io/
@@ -340,7 +340,7 @@ console.log.apply(console, arguments);
                 currentFood: {},
                 opt: {
                 // target fps
-                targetFps: 20,
+                targetFps: 100,
                         // size of arc for collisionAngles
                         arcSize: Math.PI / 8,
                         // radius multiple for circle intersects
@@ -364,7 +364,7 @@ console.log.apply(console, arguments);
                         // distance multiplier for enCircleAllThreshold
                         enCircleDistanceMult: 20,
                         // snake score to start circling on self
-                        followCircleLength: 100000,
+                        followCircleLength: 20000,
                         // direction for followCircle: +1 for counter clockwise and -1 for clockwise
                         followCircleDirection: + 1
                 },
@@ -2010,7 +2010,7 @@ console.log.apply(console, arguments);
 
                 if (window.localStorage.getItem('high-score') !== null) {
                 highScore = parseInt(window.localStorage.getItem('high-score'));
-                        highscoreContainer.textContent = 'Hi Score: ' + highScore;
+                        highscoreContainer.textContent = 'High Score: ' + highScore;
                 }
 
                 if (window.localStorage.getItem('graphics-mode') !== null) {
@@ -2354,7 +2354,7 @@ console.log.apply(console, arguments);
                 fpsContainer.textContent = 'FPS: ' + window.fps;
                 }
                 }
-                setTimeout(showFPS, 30);
+                setTimeout(showFPS, 10);
                 }
 
                 // Quit to menu
@@ -2523,32 +2523,7 @@ console.log.apply(console, arguments);
                 }
                 return window[preference];
                 }
-                /*
-                 function onmousedown(e) {
-                 if (window.playing) {
-                 switch (e.which) {
-                 // "Left click" to manually speed up the slither
-                 case 1:
-                 bot.defaultAccel = 1;
-                 if (!bot.isBotEnabled) {
-                 original_onmouseDown(e);
-                 }
-                 break;
-                 // "Right click" to toggle bot in addition to the letter "T"
-                 case 3:
-                 bot.isBotEnabled = !bot.isBotEnabled;
-                 break;
-                 }
-                 } else {
-                 original_onmouseDown(e);
-                 }
-                 }
-                 
-                 
-                 function onmouseup() {
-                 bot.defaultAccel = 0;
-                 } */
-
+                
                 // Hide top score
                 function hideTop() {
                 var nsidivs = document.querySelectorAll('div.nsi');
@@ -2611,27 +2586,12 @@ console.log.apply(console, arguments);
                         if (currentScore > highScore) {
                 highScore = currentScore;
                         localStorage.setItem('high-score', highScore);
-                        highscoreContainer.textContent = 'Hi Score: ' + highScore;
+                        highscoreContainer.textContent = 'High Score: ' + highScore;
                 }
                 } else {
                 xferContainer.textContent = '';
                         zoomContainer.textContent = '';
                         positionContainer.textContent = '';
-                }
-
-                //Add/update clock
-                var now = new Date();
-                        var hours = now.getHours();
-                        var minutes = now.getMinutes();
-                        var seconds = now.getSeconds();
-                        var timeValue = "" + ((hours > 12) ? hours - 12 : hours);
-                        timeValue += ((minutes < 10) ? ':0' : ':') + minutes;
-                        timeValue += ((seconds < 10) ? ':0' : ':') + seconds;
-                        timeValue += (hours >= 12) ? ' PM' : ' AM';
-                        clockContainer.textContent = timeValue;
-                        //Fix this
-                        if (typeof window.oncontextmenu === 'function') {
-                window.oncontextmenu = null;
                 }
 
                 setTimeout(updateLoop, 1000);
